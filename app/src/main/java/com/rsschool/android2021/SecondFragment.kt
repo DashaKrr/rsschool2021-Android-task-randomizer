@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import java.util.stream.DoubleStream.generate
 
 class SecondFragment : Fragment() {
 
@@ -32,13 +34,19 @@ class SecondFragment : Fragment() {
         result?.text = generate(min, max).toString()
 
         backButton?.setOnClickListener {
-            // TODO: implement back
+            var res=result?.text.toString().toInt()
+            val firstFragment:Fragment=FirstFragment.newInstance(res)
+            val transaction1:FragmentTransaction = activity?.supportFragmentManager!!.beginTransaction()
+            transaction1.replace(R.id.container, firstFragment)
+            transaction1.disallowAddToBackStack()
+            transaction1.commit()
+
         }
     }
 
     private fun generate(min: Int, max: Int): Int {
-        // TODO: generate random number
-        return 0
+        val result = (min..max).random()
+        return result
     }
 
     companion object {
@@ -47,8 +55,10 @@ class SecondFragment : Fragment() {
         fun newInstance(min: Int, max: Int): SecondFragment {
             val fragment = SecondFragment()
             val args = Bundle()
+            args.putInt(MIN_VALUE_KEY,min)
+            args.putInt(MAX_VALUE_KEY,max)
+            fragment.arguments = args
 
-            // TODO: implement adding arguments
 
             return fragment
         }
